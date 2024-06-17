@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.khin.dailypulse.Platform
 import com.khin.dailypulse.android.screens.AboutScreen
 import com.khin.dailypulse.articles.presentation.ArticlesViewModel
+import com.khin.dailypulse.ui.App
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppScaffold()
+                    App()
                 }
             }
         }

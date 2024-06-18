@@ -1,4 +1,4 @@
-package com.khin.dailypulse.android.screens
+package com.khin.dailypulse.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,27 +18,37 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.khin.dailypulse.Platform
 
+class AboutScreen : Screen {
+    @Composable
+    override fun Content() {
+        AboutScreenContent()
+    }
+}
+
 @Composable
-fun AboutScreen(
-    onUpButtonClick: () -> Unit,
-) {
+fun AboutScreenContent() {
     Column {
-        Toolbar(onUpButtonClick)
+        Toolbar()
         ContentView()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Toolbar(
-    onUpButtonClick: () -> Unit
-) {
+private fun Toolbar() {
+    val navigator = LocalNavigator.currentOrThrow
+
     TopAppBar(
         title = { Text(text = "About Device") },
         navigationIcon = {
-            IconButton(onClick = onUpButtonClick) {
+            IconButton(onClick = {
+                navigator.pop()
+            }) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Up Button",

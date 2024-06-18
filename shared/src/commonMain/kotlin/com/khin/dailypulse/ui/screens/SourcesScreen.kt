@@ -1,4 +1,4 @@
-package com.khin.dailypulse.android.screens
+package com.khin.dailypulse.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,33 +23,51 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.SwipeRefreshState
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.khin.dailypulse.sources.domain.Source
 import com.khin.dailypulse.sources.presentation.SourcesViewModel
-import org.koin.androidx.compose.getViewModel
+import com.khin.dailypulse.ui.screens.elements.ErrorMessage
+import org.koin.compose.koinInject
 
+
+class SourcesScreen : Screen {
+
+    @Composable
+    override fun Content() {
+        SourcesScreenContent()
+    }
+}
 
 @Composable
-fun SourcesScreen(
-    onUpButtonClick: () -> Unit,
-    viewModel: SourcesViewModel = getViewModel()
+fun SourcesScreenContent(
+    viewModel: SourcesViewModel = koinInject()
 ) {
+
+    val sourcesState = viewModel.sourcesState.collectAsState()
+
     Column {
-        Toolbar(onUpButtonClick)
+        Toolbar()
+
+        if (sourcesState.value.error != null)
+            ErrorMessage(sourcesState.value.error!!)
+
         SourceListView(viewModel)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Toolbar(
-    onUpButtonClick: () -> Unit
-) {
+private fun Toolbar() {
+    val navigator = LocalNavigator.currentOrThrow
+
     TopAppBar(
         title = { Text(text = "Sources") },
         navigationIcon = {
-            IconButton(onClick = onUpButtonClick) {
+            IconButton(onClick = {
+                navigator.pop()
+            }) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Up Button",
@@ -61,13 +80,9 @@ private fun Toolbar(
 @Composable
 fun SourceListView(viewModel: SourcesViewModel) {
 
-    SwipeRefresh(state = SwipeRefreshState(viewModel.sourcesState.value.loading), onRefresh = {
-        viewModel.getSources(true)
-    }) {
-        LazyColumn {
-            items(viewModel.sourcesState.value.sources) { source ->
-                SourceItemView(source = source)
-            }
+    LazyColumn {
+        items(viewModel.sourcesState.value.sources) { source ->
+            SourceItemView(source = source)
         }
     }
 }

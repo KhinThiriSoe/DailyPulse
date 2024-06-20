@@ -1,3 +1,5 @@
+import java.awt.SystemColor.desktop
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
@@ -7,6 +9,9 @@ plugins {
 }
 
 kotlin {
+
+    jvm("desktop")
+
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -56,6 +61,12 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
             implementation(libs.sql.native.driver)
+        }
+
+        val desktopMain by getting
+        desktopMain.dependencies {
+            implementation(libs.ktor.client.cio)
+            implementation(libs.sql.desktop.driver)
         }
 
         commonTest.dependencies {

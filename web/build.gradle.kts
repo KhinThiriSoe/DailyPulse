@@ -8,7 +8,7 @@ kotlin {
     js(IR) {
         browser {
             commonWebpackConfig {
-                outputFileName = "DailyPulse.js"
+                outputFileName = "abc.js"
             }
         }
         binaries.executable()

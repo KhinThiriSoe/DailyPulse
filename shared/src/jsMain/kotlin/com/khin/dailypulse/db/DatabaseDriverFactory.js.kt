@@ -6,5 +6,4 @@ actual class DatabaseDriverFactory {
     actual fun createDriver(): SqlDriver? {
        return null
     }
-
 }

@@ -7,7 +7,7 @@ import org.koin.dsl.module
 
 val databaseModule = module {
     single<SqlDriver> {
-        DatabaseDriverFactory().createDriver()
+        DatabaseDriverFactory().createDriver()!!
     }
 
     single<DailyPulseDatabase> {

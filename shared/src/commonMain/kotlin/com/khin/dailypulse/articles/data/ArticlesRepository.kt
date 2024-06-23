@@ -21,6 +21,4 @@ class ArticlesRepository(
         dataSource.insertArticles(fetchedArticles)
         return fetchedArticles
     }
-
-    fun getAllArticles() = dataSource.getAllArticles()
 }

@@ -2,13 +2,13 @@ package com.khin.dailypulse.sources.data
 
 import com.khin.dailypulse.db.DailyPulseDatabase
 
-class SourcesDataSource(private val database: DailyPulseDatabase) {
+class SourcesDataSource(private val database: DailyPulseDatabase?) {
 
     fun getAllSources() =
-        database.dailyPulseDatabaseQueries.selectAllSources(::mapToSourcesRaw).executeAsList()
+        database?.dailyPulseDatabaseQueries?.selectAllSources(::mapToSourcesRaw)?.executeAsList() ?: emptyList()
 
     fun insertSources(sources: List<SourcesRaw>) {
-        database.dailyPulseDatabaseQueries.transaction {
+        database?.dailyPulseDatabaseQueries?.transaction {
             sources.forEach { sourcesRaw ->
                 insertSources(sourcesRaw)
             }
@@ -16,11 +16,11 @@ class SourcesDataSource(private val database: DailyPulseDatabase) {
     }
 
     fun clearSources() {
-        database.dailyPulseDatabaseQueries.removeAllSources()
+        database?.dailyPulseDatabaseQueries?.removeAllSources()
     }
 
     private fun insertSources(sourcesRaw: SourcesRaw) {
-        database.dailyPulseDatabaseQueries.insertSource(
+        database?.dailyPulseDatabaseQueries?.insertSource(
             id = sourcesRaw.id,
             name = sourcesRaw.name,
             description = sourcesRaw.description,

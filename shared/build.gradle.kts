@@ -1,4 +1,4 @@
-import java.awt.SystemColor.desktop
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,9 +8,10 @@ plugins {
     alias(libs.plugins.composeMultiplatformPlugin)
 }
 
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
 kotlin {
 
-    jvm("desktop")
+    targetHierarchy.default()
 
     androidTarget {
         compilations.all {
@@ -27,8 +28,14 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = "shared"
-            linkerOpts.add("-lsqlite3")
         }
+    }
+
+    jvm("desktop")
+
+    js(IR) {
+        binaries.executable()
+        browser()
     }
 
     sourceSets {
@@ -69,6 +76,11 @@ kotlin {
             implementation(libs.sql.desktop.driver)
         }
 
+        val jsMain by getting
+        jsMain.dependencies {
+            implementation(libs.ktor.client.js)
+        }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
@@ -93,4 +105,8 @@ sqldelight {
             packageName.set("com.khin.dailypulse.db")
         }
     }
+}
+
+compose.experimental {
+    web.application {}
 }

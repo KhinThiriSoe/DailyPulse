@@ -6,7 +6,7 @@ import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 
 actual class DatabaseDriverFactory(private val context: Context) {
 
-    actual fun createDriver(): SqlDriver {
+    actual fun createDriver(): SqlDriver? {
         return AndroidSqliteDriver(
             schema = DailyPulseDatabase.Schema,
             context = context,
